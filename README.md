@@ -33,7 +33,3 @@ For AWS CICD pipeline with CircleCI we will need setup infrastructure first:
 
 7. Forwarding port to localhost:8080
    > kubectl port-forward service/aws-app-service 8080:80
-
-## Project preview
-
-You can see my project quick view [here](./docs/PROJECT_QUICKVIEW.md)
