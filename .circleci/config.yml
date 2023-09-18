@@ -89,5 +89,5 @@ workflows:
           requires: [build-app]
       - check-lint-app:
           requires: [build-app]
-      - build-push-app-image:
+      - build-app-image:
           requires: [test-app, scan-app, check-lint-app]
