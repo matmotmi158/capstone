@@ -144,6 +144,7 @@ jobs:
       - run:
           name: smoke test
           command: |
+            chmod +x scripts/smoke-test.sh
             scripts/smoke-test.sh
       - run:
           name: revert
