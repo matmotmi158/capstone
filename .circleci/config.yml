@@ -1,5 +1,44 @@
 version: 2.1
 
+commands:
+  kubectl-setup:
+    description: Install kubectl for environment
+    steps:
+      - run:
+          name: Install dependencies
+          command: |
+            sudo apt update
+            curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.23.17/2023-05-11/bin/linux/amd64/kubectl
+            chmod +x ./kubectl
+            mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH
+            kubectl version --short --client
+  awscli-setup:
+    description: Install awscli for environment\
+    steps:
+      - run:
+          name: Install dependencies
+          command: |
+            sudo apt update
+            sudo apt install awscli -y
+            aws configure set aws_access_key_id $AWS_ACCESS_KEY
+            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            aws configure set region us-east-1
+            aws --version
+  eksctl-setup:
+    steps:
+      - run:
+          name: install eksctl
+          command: |
+            # for ARM systems, set ARCH to: `arm64`, `armv6` or `armv7`
+            ARCH=amd64
+            PLATFORM=$(uname -s)_$ARCH
+            curl -sLO "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz"
+            # (Optional) Verify checksum
+            curl -sL "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_checksums.txt" | grep $PLATFORM | sha256sum --check
+            tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz
+            sudo mv /tmp/eksctl /usr/local/bin
+            eksctl version
+
 jobs:
   build-app:
     docker:
@@ -80,6 +119,40 @@ jobs:
             scripts/push-image.sh latest 
             scripts/push-image.sh ${CIRCLE_SHA1:0:7}
 
+  deploy-app:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - awscli-setup
+      - kubectl-setup
+      - eksctl-setup
+      - run:
+          name: add eks cluster context
+          command: |
+            aws eks update-kubeconfig --region us-east-1 --name aws-devops-capstone-cluster
+            kubectl config get-contexts
+            kubectl get all
+            kubectl describe deployment aws-app-deployment
+      - run:
+          name: deploy app
+          command: |
+            kubectl set image deployment/aws-app-deployment aws-app=maian1891/aws-devops-capstone-app:${CIRCLE_SHA1:0:7}
+            kubectl rollout status deployment aws-app-deployment
+            kubectl describe deployment aws-app-deployment
+            kubectl get all
+      - run:
+          name: smoke test
+          command: |
+            scripts/smoke-test.sh
+      - run:
+          name: revert
+          command: |
+            kubectl rollout undo deployment aws-app-deployment
+            kubectl describe deployment aws-app-deployment
+            kubectl get all
+          when: on_fail
+
 workflows:
   default:
     jobs:
@@ -93,3 +166,5 @@ workflows:
           requires: [build-app]
       - build-app-image:
           requires: [test-app, scan-app, check-lint-app]
+      - deploy-app:
+          requires: [build-app-image]

@@ -1,8 +1,7 @@
 #/bin/bash
 TAG=$1
 
-if [ ! $TAG ]
-then
+if [ ! $TAG ]; then
     TAG="latest"
 fi
 

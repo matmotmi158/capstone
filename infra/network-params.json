@@ -1,0 +1,26 @@
+[
+    {
+      "ParameterKey": "VPCCidr",
+      "ParameterValue": "10.1.0.0/16"
+    },
+    {
+      "ParameterKey": "Tag",
+      "ParameterValue": "aws-devops-capstone"
+    },
+    {
+      "ParameterKey": "PublicSubnetCidr1",
+      "ParameterValue": "10.1.0.0/24"
+    },
+    {
+      "ParameterKey": "PublicSubnetCidr2",
+      "ParameterValue": "10.1.2.0/24"
+    },
+    {
+      "ParameterKey": "PrivateSubnetCidr1",
+      "ParameterValue": "10.1.3.0/24"
+    },
+    {
+      "ParameterKey": "PrivateSubnetCidr2",
+      "ParameterValue": "10.1.4.0/24"
+    }
+  ]
