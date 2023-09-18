@@ -70,11 +70,13 @@ jobs:
       - run:
           name: Build app image
           command: |
+            chmod +x scripts/build-image.sh
             scripts/build-image.sh latest 
             scripts/build-image.sh ${CIRCLE_SHA1:0:7}
       - run:
           name: Push app image
           command: |
+            chmod +x scripts/push-image.sh
             scripts/push-image.sh latest 
             scripts/push-image.sh ${CIRCLE_SHA1:0:7}
 
