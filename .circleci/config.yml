@@ -137,7 +137,7 @@ jobs:
       - run:
           name: deploy app
           command: |
-            kubectl set image deployment/aws-app-deployment aws-app=maian1891/aws-devops-capstone-app:${CIRCLE_SHA1:0:7}
+            kubectl set image deployment/aws-app-deployment aws-app=matmotmi158/capstone-app:${CIRCLE_SHA1:0:7}
             kubectl rollout status deployment aws-app-deployment
             kubectl describe deployment aws-app-deployment
             kubectl get all

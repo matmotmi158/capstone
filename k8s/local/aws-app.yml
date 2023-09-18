@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
         - name: aws-app
-          image: maian1891/aws-devops-capstone-app
+          image: matmotmi158/capstone-app
           imagePullPolicy: Always
           ports:
-            - containerPort: 80
+          - containerPort: 80
