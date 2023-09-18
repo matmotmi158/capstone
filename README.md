@@ -11,9 +11,11 @@ Forwarding port to localhost:8080 > kubectl port-forward service/aws-app-service
 ### AWS
 For AWS CICD pipeline with CircleCI we will need setup infrastructure first:
 1. Create network infrastructure
+   > chmod +x ./scripts/deploy-network.sh
    > ./scripts/deploy-network.sh create
 
 2. Create cluster infrastructure (EKS)
+   > chmod +x ./scripts/deploy-cluster.sh
    > ./scripts/deploy-cluster.sh create
 
 3. Add EKS cluster to local kube config

@@ -1,7 +1,7 @@
 # build stage
 FROM node:18.17.0 as build-stage
-WORKDIR /application/reactApp
-COPY /reactApp .
+WORKDIR /reactApp
+COPY reactApp .
 RUN npm install
 RUN npm run build
 

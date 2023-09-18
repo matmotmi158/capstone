@@ -90,5 +90,5 @@ Resources:
         - !ImportValue PublicSubnet1
         - !ImportValue PublicSubnet2
       RemoteAccess:
-        Ec2SshKey: awsDevOpsCapstone
+        Ec2SshKey: aws_captone
     DependsOn: EKSCluster
